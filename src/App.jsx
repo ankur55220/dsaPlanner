@@ -1,5 +1,6 @@
 import { BrowserRouter, Routes, Route } from 'react-router-dom'
 import Navbar from './components/Navbar'
+import RequireAuth from './components/RequireAuth'
 import Dashboard from './routes/Dashboard'
 import Patterns from './routes/Patterns'
 import PatternDetail from './routes/PatternDetail'
@@ -15,12 +16,54 @@ function App() {
         <Navbar />
         <main className="flex-1 max-w-5xl mx-auto w-full px-4 py-6">
           <Routes>
-            <Route path="/" element={<Dashboard />} />
-            <Route path="/patterns" element={<Patterns />} />
-            <Route path="/patterns/:patternId" element={<PatternDetail />} />
-            <Route path="/problems/:problemId" element={<ProblemDetail />} />
-            <Route path="/daily-log" element={<DailyLog />} />
-            <Route path="/weekly-plan" element={<WeeklyPlan />} />
+            <Route
+              path="/"
+              element={(
+                <RequireAuth>
+                  <Dashboard />
+                </RequireAuth>
+              )}
+            />
+            <Route
+              path="/patterns"
+              element={(
+                <RequireAuth>
+                  <Patterns />
+                </RequireAuth>
+              )}
+            />
+            <Route
+              path="/patterns/:patternId"
+              element={(
+                <RequireAuth>
+                  <PatternDetail />
+                </RequireAuth>
+              )}
+            />
+            <Route
+              path="/problems/:problemId"
+              element={(
+                <RequireAuth>
+                  <ProblemDetail />
+                </RequireAuth>
+              )}
+            />
+            <Route
+              path="/daily-log"
+              element={(
+                <RequireAuth>
+                  <DailyLog />
+                </RequireAuth>
+              )}
+            />
+            <Route
+              path="/weekly-plan"
+              element={(
+                <RequireAuth>
+                  <WeeklyPlan />
+                </RequireAuth>
+              )}
+            />
             <Route path="/login" element={<Login />} />
           </Routes>
         </main>
