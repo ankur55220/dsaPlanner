@@ -5,55 +5,52 @@ export default {
     darkMode: ['class'],
     content: ['./index.html', './src/**/*.{js,jsx,ts,tsx}'],
   theme: {
-  	extend: {
-  		borderRadius: {
-  			lg: 'var(--radius)',
-  			md: 'calc(var(--radius) - 2px)',
-  			sm: 'calc(var(--radius) - 4px)'
-  		},
-  		colors: {
-  			background: 'hsl(var(--background))',
-  			foreground: 'hsl(var(--foreground))',
-  			card: {
-  				DEFAULT: 'hsl(var(--card))',
-  				foreground: 'hsl(var(--card-foreground))'
-  			},
-  			popover: {
-  				DEFAULT: 'hsl(var(--popover))',
-  				foreground: 'hsl(var(--popover-foreground))'
-  			},
-  			primary: {
-  				DEFAULT: 'hsl(var(--primary))',
-  				foreground: 'hsl(var(--primary-foreground))'
-  			},
-  			secondary: {
-  				DEFAULT: 'hsl(var(--secondary))',
-  				foreground: 'hsl(var(--secondary-foreground))'
-  			},
-  			muted: {
-  				DEFAULT: 'hsl(var(--muted))',
-  				foreground: 'hsl(var(--muted-foreground))'
-  			},
-  			accent: {
-  				DEFAULT: 'hsl(var(--accent))',
-  				foreground: 'hsl(var(--accent-foreground))'
-  			},
-  			destructive: {
-  				DEFAULT: 'hsl(var(--destructive))',
-  				foreground: 'hsl(var(--destructive-foreground))'
-  			},
-  			border: 'hsl(var(--border))',
-  			input: 'hsl(var(--input))',
-  			ring: 'hsl(var(--ring))',
-  			chart: {
-  				'1': 'hsl(var(--chart-1))',
-  				'2': 'hsl(var(--chart-2))',
-  				'3': 'hsl(var(--chart-3))',
-  				'4': 'hsl(var(--chart-4))',
-  				'5': 'hsl(var(--chart-5))'
-  			}
-  		}
-  	}
+  extend: {
+    colors: {
+      primary: "var(--color-primary)",
+      "primary-light": "var(--color-primary-light)",
+      "primary-lighter": "var(--color-primary-lighter)",
+      accent: "var(--color-accent)",
+      "accent-light": "var(--color-accent-light)",
+      bg: "var(--color-bg)",
+      "bg-soft": "var(--color-bg-soft)",
+      "bg-section": "var(--color-bg-section)",
+      text: "var(--color-text)",
+      "text-soft": "var(--color-text-soft)",
+      "text-muted": "var(--color-text-muted)",
+    },
+
+    borderRadius: {
+      sm: "var(--radius-sm)",
+      md: "var(--radius-md)",
+      lg: "var(--radius-lg)",
+      xl: "var(--radius-xl)",
+      section: "var(--radius-section)",
+    },
+
+    spacing: {
+      1: "var(--space-1)",
+      2: "var(--space-2)",
+      3: "var(--space-3)",
+      4: "var(--space-4)",
+      6: "var(--space-6)",
+      8: "var(--space-8)",
+      12: "var(--space-12)",
+      16: "var(--space-16)",
+      24: "var(--space-24)",
+    },
+
+    boxShadow: {
+      card: "var(--shadow-card)",
+      lg: "var(--shadow-lg)",
+    },
+
+    backgroundImage: {
+      "gradient-primary": "var(--gradient-primary)",
+      "gradient-soft": "var(--gradient-soft)",
+    },
   },
+},
+
   plugins: [tailwindcssAnimate],
 }

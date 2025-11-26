@@ -1,0 +1,56 @@
+name: CI Pipeline
+
+# Run CI on pushes and PRs
+on:
+  pull_request:
+    branches: [main, dev]
+  push:
+    branches: [main, dev, "feature/**"]
+
+jobs:
+  ci:
+    runs-on: ubuntu-latest
+
+    steps:
+      # 1. Checkout repository
+      - name: Checkout
+        uses: actions/checkout@v3
+
+      # 2. Setup Node.js environment
+      - name: Setup Node
+        uses: actions/setup-node@v3
+        with:
+          node-version: 22.12.0
+
+      # 3. Cache dependencies for speed
+      - name: Cache npm dependencies
+        uses: actions/cache@v3
+        with:
+          path: ~/.npm
+          key: ${{ runner.os }}-npm-${{ hashFiles('package-lock.json') }}
+          restore-keys: |
+            ${{ runner.os }}-npm-
+
+      # 4. Install dependencies
+      - name: Install dependencies
+        run: npm install
+
+      # 5. Lint
+      - name: Lint
+        run: npm run lint --if-present
+
+      # 6. Type checking
+      - name: Type Check
+        run: npm run type-check --if-present
+
+      # 7. Build check (like Vercel)
+      - name: Build
+        run: npm run build --if-present
+
+      # 8. Setup Supabase CLI
+      - name: Setup Supabase CLI
+        uses: supabase/setup-cli@v1
+
+      # 9. Validate migrations (simulate supabase start)
+      - name: Validate migrations
+        run: supabase db reset --local
