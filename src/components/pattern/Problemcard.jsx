@@ -1,11 +1,11 @@
-import { motion } from "framer-motion";
+import { motion as Motion } from "framer-motion";
 import Surface from "../ui/Surface";
 import { CheckCircle, Circle } from "lucide-react";
 
 
 export default function ProblemCard({ problem,isSolved,onSolve,onUnsolve}) {
   return (
-    <motion.div
+    <Motion.div
       initial={{ opacity: 0, y: 12 }}
       animate={{ opacity: 1, y: 0 }}
       transition={{ duration: 0.25 }}
@@ -57,6 +57,6 @@ export default function ProblemCard({ problem,isSolved,onSolve,onUnsolve}) {
           )}
         </div>
       </Surface>
-    </motion.div>
+    </Motion.div>
   );
 }
