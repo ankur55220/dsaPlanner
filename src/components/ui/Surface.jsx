@@ -1,13 +1,10 @@
-export function Surface({ children, className = "" }) {
+export default function Surface({ className = "", children }) {
   return (
     <div
-      className={`
-        bg-white dark:bg-slate-900 
-        rounded-xl 
-        shadow-lg 
-        p-8 
-        ${className}
-      `}
+      className={
+        "rounded-xl bg-slate-800/60 backdrop-blur-sm border border-slate-700/60 shadow-sm p-5 " +
+        className
+      }
     >
       {children}
     </div>

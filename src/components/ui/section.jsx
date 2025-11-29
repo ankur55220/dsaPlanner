@@ -1,14 +1,8 @@
-export function Section({ children, className = "", bg = false }) {
+export default function Section({ title, children }) {
   return (
-    <section
-      className={`
-        w-full
-        py-24
-        ${bg ? "bg-bg-section rounded-section" : ""}
-        ${className}
-      `}
-    >
+    <div className="space-y-4 mb-10">
+      <h2 className="text-xl font-semibold text-white">{title}</h2>
       {children}
-    </section>
+    </div>
   );
 }

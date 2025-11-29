@@ -5,6 +5,14 @@ export default function RequireAuth({ children }) {
   const { session, loading } = useAuth()
   const location = useLocation()
 
+  console.log('RequireAuth state:', { session, loading, hasSession: !!session })
+
+  // 1. If we have a session, always allow access.
+  if (session) {
+    return children
+  }
+
+  // 2. While we don't know yet, show loading UI.
   if (loading) {
     return (
       <div className="min-h-[calc(100vh-4rem)] flex items-center justify-center text-white">
@@ -13,9 +21,6 @@ export default function RequireAuth({ children }) {
     )
   }
 
-  if (!session) {
-    return <Navigate to="/login" replace state={{ from: location }} />
-  }
-
-  return children
+  // 3. No session and not loading -> redirect to login.
+  return <Navigate to="/login" replace state={{ from: location }} />
 }

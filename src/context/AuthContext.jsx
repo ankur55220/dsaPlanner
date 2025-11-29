@@ -9,26 +9,21 @@ export function AuthProvider({ children }) {
   const [loading, setLoading] = useState(true)
 
   useEffect(() => {
-    supabase.auth.getSession()
-      .then(({ data: { session } }) => {
-        setSession(session)
-        setLoading(false)
-      })
-      .catch((error) => {
-        console.error('Supabase getSession error:', error)
-        setLoading(false)
-      })
 
+   
+  
+    // 2. Listen for auth state changes
     const {
       data: { subscription },
-    } = supabase.auth.onAuthStateChange(async (event, session) => {
-      setSession(session)
+    } = supabase.auth.onAuthStateChange(async (event, newSession) => {
+      console.log('🔐 Auth state change:', event, newSession ? 'has session' : 'no session')
+      setSession(newSession)
+      setLoading(false)
 
-      if (event === 'SIGNED_IN' && session) {
-        await syncUserProfile(session)
-      }
+      
     })
 
+    // 3. Cleanup subscription on unmount
     return () => {
       subscription.unsubscribe()
     }

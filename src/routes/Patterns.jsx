@@ -12,22 +12,30 @@ export default function Patterns() {
 
   // Fetch patterns from Supabase
   useEffect(() => {
-    async function loadPatterns() {
-      setLoading(true);
+  async function loadPatterns() {
+    setLoading(true);
+    console.log("sesLogFor",supabase)
+
+    try {
+      // Add timeout wrapper to catch hangs
+     
 
       const { data, error } = await supabase
         .from("patterns")
-        .select("id, title, description, status, solved_count, total_problems");
+        .select("id, name, description, status, solved_count, total_problems");
 
       if (!error) {
         setPatterns(data);
       }
-
-      setLoading(false);
+    } catch (err) {
+      console.error("Error caught:", err)
     }
 
-    loadPatterns();
-  }, []);
+    setLoading(false);
+  }
+
+  loadPatterns();
+}, []);
 
   if (loading) {
     return (

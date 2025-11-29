@@ -7,6 +7,7 @@ export default {
   theme: {
   extend: {
     colors: {
+      // existing app theme colors
       primary: "var(--color-primary)",
       "primary-light": "var(--color-primary-light)",
       "primary-lighter": "var(--color-primary-lighter)",
@@ -18,6 +19,30 @@ export default {
       text: "var(--color-text)",
       "text-soft": "var(--color-text-soft)",
       "text-muted": "var(--color-text-muted)",
+
+      // shadcn-ui theme tokens used in index.css
+      border: "hsl(var(--border))",
+      input: "hsl(var(--input))",
+      ring: "hsl(var(--ring))",
+      background: "hsl(var(--background))",
+      foreground: "hsl(var(--foreground))",
+      card: "hsl(var(--card))",
+      "card-foreground": "hsl(var(--card-foreground))",
+      popover: "hsl(var(--popover))",
+      "popover-foreground": "hsl(var(--popover-foreground))",
+      "primary-foreground": "hsl(var(--primary-foreground))",
+      secondary: "hsl(var(--secondary))",
+      "secondary-foreground": "hsl(var(--secondary-foreground))",
+      muted: "hsl(var(--muted))",
+      "muted-foreground": "hsl(var(--muted-foreground))",
+      accent2: "hsl(var(--accent))",
+      "accent2-foreground": "hsl(var(--accent-foreground))",
+      destructive: "hsl(var(--destructive))",
+      "destructive-foreground": "hsl(var(--destructive-foreground))",
+    },
+
+    borderColor: {
+      DEFAULT: 'hsl(var(--border))',
     },
 
     borderRadius: {
