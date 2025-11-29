@@ -1,6 +1,8 @@
 export function H1({ children, className = "" }) {
   return (
-    <h1 className={`text-4xl font-bold tracking-tight text-text ${className}`}>
+    <h1
+      className={`text-4xl font-bold tracking-tight text-slate-100 ${className}`}
+    >
       {children}
     </h1>
   );
@@ -8,7 +10,9 @@ export function H1({ children, className = "" }) {
 
 export function H2({ children, className = "" }) {
   return (
-    <h2 className={`text-2xl font-semibold tracking-tight text-text ${className}`}>
+    <h2
+      className={`text-2xl font-semibold tracking-tight text-slate-100 ${className}`}
+    >
       {children}
     </h2>
   );
