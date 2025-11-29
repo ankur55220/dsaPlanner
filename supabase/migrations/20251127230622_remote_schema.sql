@@ -1,0 +1,681 @@
+
+
+
+SET statement_timeout = 0;
+SET lock_timeout = 0;
+SET idle_in_transaction_session_timeout = 0;
+SET client_encoding = 'UTF8';
+SET standard_conforming_strings = on;
+SELECT pg_catalog.set_config('search_path', '', false);
+SET check_function_bodies = false;
+SET xmloption = content;
+SET client_min_messages = warning;
+SET row_security = off;
+
+
+COMMENT ON SCHEMA "public" IS 'standard public schema';
+
+
+
+CREATE EXTENSION IF NOT EXISTS "pg_graphql" WITH SCHEMA "graphql";
+
+
+
+
+
+
+CREATE EXTENSION IF NOT EXISTS "pg_stat_statements" WITH SCHEMA "extensions";
+
+
+
+
+
+
+CREATE EXTENSION IF NOT EXISTS "pgcrypto" WITH SCHEMA "extensions";
+
+
+
+
+
+
+CREATE EXTENSION IF NOT EXISTS "supabase_vault" WITH SCHEMA "vault";
+
+
+
+
+
+
+CREATE EXTENSION IF NOT EXISTS "uuid-ossp" WITH SCHEMA "extensions";
+
+
+
+
+
+
+CREATE OR REPLACE FUNCTION "public"."set_updated_at"() RETURNS "trigger"
+    LANGUAGE "plpgsql"
+    AS $$
+begin
+  new.updated_at = now();
+  return new;
+end;
+$$;
+
+
+ALTER FUNCTION "public"."set_updated_at"() OWNER TO "postgres";
+
+SET default_tablespace = '';
+
+SET default_table_access_method = "heap";
+
+
+CREATE TABLE IF NOT EXISTS "public"."daily_logs" (
+    "id" "uuid" DEFAULT "gen_random_uuid"() NOT NULL,
+    "user_id" "uuid" NOT NULL,
+    "log_date" "date" NOT NULL,
+    "problems_read" "jsonb",
+    "problem_solved" "uuid",
+    "pattern_id" "uuid",
+    "time_spent_minutes" integer,
+    "mistakes" "text",
+    "confidence" "text",
+    "notes" "text",
+    "created_at" timestamp with time zone DEFAULT "now"()
+);
+
+
+ALTER TABLE "public"."daily_logs" OWNER TO "postgres";
+
+
+CREATE TABLE IF NOT EXISTS "public"."pattern_notes" (
+    "id" "uuid" DEFAULT "gen_random_uuid"() NOT NULL,
+    "user_id" "uuid" NOT NULL,
+    "pattern_id" "uuid" NOT NULL,
+    "content" "text",
+    "created_at" timestamp with time zone DEFAULT "now"(),
+    "updated_at" timestamp with time zone DEFAULT "now"()
+);
+
+
+ALTER TABLE "public"."pattern_notes" OWNER TO "postgres";
+
+
+CREATE TABLE IF NOT EXISTS "public"."patterns" (
+    "id" "uuid" DEFAULT "gen_random_uuid"() NOT NULL,
+    "slug" "text" NOT NULL,
+    "name" "text" NOT NULL,
+    "category" "text",
+    "description" "text",
+    "order_index" integer,
+    "created_at" timestamp with time zone DEFAULT "now"(),
+    "status" "text" DEFAULT 'not-started'::"text",
+    "solved_count" integer DEFAULT 0,
+    "total_problems" integer DEFAULT 10
+);
+
+
+ALTER TABLE "public"."patterns" OWNER TO "postgres";
+
+
+CREATE TABLE IF NOT EXISTS "public"."problem_explanations" (
+    "id" "uuid" DEFAULT "gen_random_uuid"() NOT NULL,
+    "problem_id" "uuid" NOT NULL,
+    "short_reason" "text",
+    "explanation" "text",
+    "hints" "text",
+    "pattern_triggers" "text"[],
+    "pitfalls" "text",
+    "constraints_summary" "text",
+    "created_at" timestamp with time zone DEFAULT "now"()
+);
+
+
+ALTER TABLE "public"."problem_explanations" OWNER TO "postgres";
+
+
+CREATE TABLE IF NOT EXISTS "public"."problems" (
+    "id" "uuid" DEFAULT "gen_random_uuid"() NOT NULL,
+    "pattern_id" "uuid" NOT NULL,
+    "title" "text" NOT NULL,
+    "source" "text" NOT NULL,
+    "external_id" "text",
+    "link" "text",
+    "difficulty" "text",
+    "is_active" boolean DEFAULT true,
+    "created_at" timestamp with time zone DEFAULT "now"()
+);
+
+
+ALTER TABLE "public"."problems" OWNER TO "postgres";
+
+
+CREATE TABLE IF NOT EXISTS "public"."profiles" (
+    "id" "uuid" NOT NULL,
+    "email" "text",
+    "display_name" "text",
+    "avatar_url" "text",
+    "bio" "text",
+    "preferences" "jsonb" DEFAULT '{}'::"jsonb",
+    "created_at" timestamp with time zone DEFAULT "now"(),
+    "updated_at" timestamp with time zone DEFAULT "now"()
+);
+
+
+ALTER TABLE "public"."profiles" OWNER TO "postgres";
+
+
+CREATE TABLE IF NOT EXISTS "public"."user_problem_progress" (
+    "id" "uuid" DEFAULT "gen_random_uuid"() NOT NULL,
+    "user_id" "uuid" NOT NULL,
+    "problem_id" "uuid" NOT NULL,
+    "status" "text" DEFAULT 'unsolved'::"text" NOT NULL,
+    "attempts" integer DEFAULT 0,
+    "last_attempt_at" timestamp with time zone,
+    "last_result" "text",
+    "notes" "text",
+    "rating" integer,
+    "created_at" timestamp with time zone DEFAULT "now"()
+);
+
+
+ALTER TABLE "public"."user_problem_progress" OWNER TO "postgres";
+
+
+CREATE TABLE IF NOT EXISTS "public"."weekly_plans" (
+    "id" "uuid" DEFAULT "gen_random_uuid"() NOT NULL,
+    "user_id" "uuid" NOT NULL,
+    "week_number" integer NOT NULL,
+    "year" integer NOT NULL,
+    "pattern_id" "uuid",
+    "status" "text" DEFAULT 'not_started'::"text",
+    "checklist" "jsonb",
+    "notes" "text",
+    "created_at" timestamp with time zone DEFAULT "now"()
+);
+
+
+ALTER TABLE "public"."weekly_plans" OWNER TO "postgres";
+
+
+ALTER TABLE ONLY "public"."daily_logs"
+    ADD CONSTRAINT "daily_logs_pkey" PRIMARY KEY ("id");
+
+
+
+ALTER TABLE ONLY "public"."daily_logs"
+    ADD CONSTRAINT "daily_logs_user_id_log_date_key" UNIQUE ("user_id", "log_date");
+
+
+
+ALTER TABLE ONLY "public"."pattern_notes"
+    ADD CONSTRAINT "pattern_notes_pkey" PRIMARY KEY ("id");
+
+
+
+ALTER TABLE ONLY "public"."pattern_notes"
+    ADD CONSTRAINT "pattern_notes_user_id_pattern_id_key" UNIQUE ("user_id", "pattern_id");
+
+
+
+ALTER TABLE ONLY "public"."patterns"
+    ADD CONSTRAINT "patterns_pkey" PRIMARY KEY ("id");
+
+
+
+ALTER TABLE ONLY "public"."patterns"
+    ADD CONSTRAINT "patterns_slug_key" UNIQUE ("slug");
+
+
+
+ALTER TABLE ONLY "public"."problem_explanations"
+    ADD CONSTRAINT "problem_explanations_pkey" PRIMARY KEY ("id");
+
+
+
+ALTER TABLE ONLY "public"."problems"
+    ADD CONSTRAINT "problems_pkey" PRIMARY KEY ("id");
+
+
+
+ALTER TABLE ONLY "public"."profiles"
+    ADD CONSTRAINT "profiles_pkey" PRIMARY KEY ("id");
+
+
+
+ALTER TABLE ONLY "public"."user_problem_progress"
+    ADD CONSTRAINT "user_problem_progress_pkey" PRIMARY KEY ("id");
+
+
+
+ALTER TABLE ONLY "public"."user_problem_progress"
+    ADD CONSTRAINT "user_problem_progress_user_id_problem_id_key" UNIQUE ("user_id", "problem_id");
+
+
+
+ALTER TABLE ONLY "public"."weekly_plans"
+    ADD CONSTRAINT "weekly_plans_pkey" PRIMARY KEY ("id");
+
+
+
+ALTER TABLE ONLY "public"."weekly_plans"
+    ADD CONSTRAINT "weekly_plans_user_id_week_number_year_key" UNIQUE ("user_id", "week_number", "year");
+
+
+
+CREATE OR REPLACE TRIGGER "trg_pattern_notes_updated_at" BEFORE UPDATE ON "public"."pattern_notes" FOR EACH ROW EXECUTE FUNCTION "public"."set_updated_at"();
+
+
+
+CREATE OR REPLACE TRIGGER "trg_profiles_updated_at" BEFORE UPDATE ON "public"."profiles" FOR EACH ROW EXECUTE FUNCTION "public"."set_updated_at"();
+
+
+
+ALTER TABLE ONLY "public"."daily_logs"
+    ADD CONSTRAINT "daily_logs_pattern_id_fkey" FOREIGN KEY ("pattern_id") REFERENCES "public"."patterns"("id");
+
+
+
+ALTER TABLE ONLY "public"."daily_logs"
+    ADD CONSTRAINT "daily_logs_problem_solved_fkey" FOREIGN KEY ("problem_solved") REFERENCES "public"."problems"("id");
+
+
+
+ALTER TABLE ONLY "public"."daily_logs"
+    ADD CONSTRAINT "daily_logs_user_id_fkey" FOREIGN KEY ("user_id") REFERENCES "public"."profiles"("id") ON DELETE CASCADE;
+
+
+
+ALTER TABLE ONLY "public"."pattern_notes"
+    ADD CONSTRAINT "pattern_notes_pattern_id_fkey" FOREIGN KEY ("pattern_id") REFERENCES "public"."patterns"("id") ON DELETE CASCADE;
+
+
+
+ALTER TABLE ONLY "public"."pattern_notes"
+    ADD CONSTRAINT "pattern_notes_user_id_fkey" FOREIGN KEY ("user_id") REFERENCES "public"."profiles"("id") ON DELETE CASCADE;
+
+
+
+ALTER TABLE ONLY "public"."problem_explanations"
+    ADD CONSTRAINT "problem_explanations_problem_id_fkey" FOREIGN KEY ("problem_id") REFERENCES "public"."problems"("id") ON DELETE CASCADE;
+
+
+
+ALTER TABLE ONLY "public"."problems"
+    ADD CONSTRAINT "problems_pattern_id_fkey" FOREIGN KEY ("pattern_id") REFERENCES "public"."patterns"("id") ON DELETE CASCADE;
+
+
+
+ALTER TABLE ONLY "public"."profiles"
+    ADD CONSTRAINT "profiles_id_fkey" FOREIGN KEY ("id") REFERENCES "auth"."users"("id") ON DELETE CASCADE;
+
+
+
+ALTER TABLE ONLY "public"."user_problem_progress"
+    ADD CONSTRAINT "user_problem_progress_problem_id_fkey" FOREIGN KEY ("problem_id") REFERENCES "public"."problems"("id") ON DELETE CASCADE;
+
+
+
+ALTER TABLE ONLY "public"."user_problem_progress"
+    ADD CONSTRAINT "user_problem_progress_user_id_fkey" FOREIGN KEY ("user_id") REFERENCES "public"."profiles"("id") ON DELETE CASCADE;
+
+
+
+ALTER TABLE ONLY "public"."weekly_plans"
+    ADD CONSTRAINT "weekly_plans_pattern_id_fkey" FOREIGN KEY ("pattern_id") REFERENCES "public"."patterns"("id");
+
+
+
+ALTER TABLE ONLY "public"."weekly_plans"
+    ADD CONSTRAINT "weekly_plans_user_id_fkey" FOREIGN KEY ("user_id") REFERENCES "public"."profiles"("id") ON DELETE CASCADE;
+
+
+
+CREATE POLICY "Enable users to view their own data only" ON "public"."profiles" FOR SELECT TO "authenticated" USING ((( SELECT "auth"."uid"() AS "uid") = "id"));
+
+
+
+CREATE POLICY "Users can manage own daily progress" ON "public"."daily_logs" USING (("auth"."uid"() = "user_id"));
+
+
+
+CREATE POLICY "Users can manage own notes" ON "public"."pattern_notes" FOR SELECT USING (("auth"."uid"() = "user_id"));
+
+
+
+CREATE POLICY "Users can manage own problem progress" ON "public"."user_problem_progress" USING (("auth"."uid"() = "user_id"));
+
+
+
+CREATE POLICY "Users can manage own weekly plan" ON "public"."weekly_plans" USING (("auth"."uid"() = "user_id"));
+
+
+
+ALTER TABLE "public"."daily_logs" ENABLE ROW LEVEL SECURITY;
+
+
+CREATE POLICY "insert own prfile" ON "public"."profiles" FOR INSERT WITH CHECK (("auth"."uid"() = "id"));
+
+
+
+CREATE POLICY "only authenticated can see" ON "public"."problems" FOR SELECT USING (("auth"."role"() = 'authenticated'::"text"));
+
+
+
+ALTER TABLE "public"."pattern_notes" ENABLE ROW LEVEL SECURITY;
+
+
+ALTER TABLE "public"."problems" ENABLE ROW LEVEL SECURITY;
+
+
+ALTER TABLE "public"."profiles" ENABLE ROW LEVEL SECURITY;
+
+
+CREATE POLICY "update own" ON "public"."profiles" FOR UPDATE USING (("auth"."uid"() = "id"));
+
+
+
+CREATE POLICY "user can update their own profile" ON "public"."profiles" FOR UPDATE USING (("auth"."uid"() = "id"));
+
+
+
+ALTER TABLE "public"."user_problem_progress" ENABLE ROW LEVEL SECURITY;
+
+
+ALTER TABLE "public"."weekly_plans" ENABLE ROW LEVEL SECURITY;
+
+
+
+
+ALTER PUBLICATION "supabase_realtime" OWNER TO "postgres";
+
+
+GRANT USAGE ON SCHEMA "public" TO "postgres";
+GRANT USAGE ON SCHEMA "public" TO "anon";
+GRANT USAGE ON SCHEMA "public" TO "authenticated";
+GRANT USAGE ON SCHEMA "public" TO "service_role";
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+GRANT ALL ON FUNCTION "public"."set_updated_at"() TO "anon";
+GRANT ALL ON FUNCTION "public"."set_updated_at"() TO "authenticated";
+GRANT ALL ON FUNCTION "public"."set_updated_at"() TO "service_role";
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+GRANT ALL ON TABLE "public"."daily_logs" TO "anon";
+GRANT ALL ON TABLE "public"."daily_logs" TO "authenticated";
+GRANT ALL ON TABLE "public"."daily_logs" TO "service_role";
+
+
+
+GRANT ALL ON TABLE "public"."pattern_notes" TO "anon";
+GRANT ALL ON TABLE "public"."pattern_notes" TO "authenticated";
+GRANT ALL ON TABLE "public"."pattern_notes" TO "service_role";
+
+
+
+GRANT ALL ON TABLE "public"."patterns" TO "anon";
+GRANT ALL ON TABLE "public"."patterns" TO "authenticated";
+GRANT ALL ON TABLE "public"."patterns" TO "service_role";
+
+
+
+GRANT ALL ON TABLE "public"."problem_explanations" TO "anon";
+GRANT ALL ON TABLE "public"."problem_explanations" TO "authenticated";
+GRANT ALL ON TABLE "public"."problem_explanations" TO "service_role";
+
+
+
+GRANT ALL ON TABLE "public"."problems" TO "anon";
+GRANT ALL ON TABLE "public"."problems" TO "authenticated";
+GRANT ALL ON TABLE "public"."problems" TO "service_role";
+
+
+
+GRANT ALL ON TABLE "public"."profiles" TO "anon";
+GRANT ALL ON TABLE "public"."profiles" TO "authenticated";
+GRANT ALL ON TABLE "public"."profiles" TO "service_role";
+
+
+
+GRANT ALL ON TABLE "public"."user_problem_progress" TO "anon";
+GRANT ALL ON TABLE "public"."user_problem_progress" TO "authenticated";
+GRANT ALL ON TABLE "public"."user_problem_progress" TO "service_role";
+
+
+
+GRANT ALL ON TABLE "public"."weekly_plans" TO "anon";
+GRANT ALL ON TABLE "public"."weekly_plans" TO "authenticated";
+GRANT ALL ON TABLE "public"."weekly_plans" TO "service_role";
+
+
+
+
+
+
+
+
+
+ALTER DEFAULT PRIVILEGES FOR ROLE "postgres" IN SCHEMA "public" GRANT ALL ON SEQUENCES TO "postgres";
+ALTER DEFAULT PRIVILEGES FOR ROLE "postgres" IN SCHEMA "public" GRANT ALL ON SEQUENCES TO "anon";
+ALTER DEFAULT PRIVILEGES FOR ROLE "postgres" IN SCHEMA "public" GRANT ALL ON SEQUENCES TO "authenticated";
+ALTER DEFAULT PRIVILEGES FOR ROLE "postgres" IN SCHEMA "public" GRANT ALL ON SEQUENCES TO "service_role";
+
+
+
+
+
+
+ALTER DEFAULT PRIVILEGES FOR ROLE "postgres" IN SCHEMA "public" GRANT ALL ON FUNCTIONS TO "postgres";
+ALTER DEFAULT PRIVILEGES FOR ROLE "postgres" IN SCHEMA "public" GRANT ALL ON FUNCTIONS TO "anon";
+ALTER DEFAULT PRIVILEGES FOR ROLE "postgres" IN SCHEMA "public" GRANT ALL ON FUNCTIONS TO "authenticated";
+ALTER DEFAULT PRIVILEGES FOR ROLE "postgres" IN SCHEMA "public" GRANT ALL ON FUNCTIONS TO "service_role";
+
+
+
+
+
+
+ALTER DEFAULT PRIVILEGES FOR ROLE "postgres" IN SCHEMA "public" GRANT ALL ON TABLES TO "postgres";
+ALTER DEFAULT PRIVILEGES FOR ROLE "postgres" IN SCHEMA "public" GRANT ALL ON TABLES TO "anon";
+ALTER DEFAULT PRIVILEGES FOR ROLE "postgres" IN SCHEMA "public" GRANT ALL ON TABLES TO "authenticated";
+ALTER DEFAULT PRIVILEGES FOR ROLE "postgres" IN SCHEMA "public" GRANT ALL ON TABLES TO "service_role";
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+drop extension if exists "pg_net";
+
+

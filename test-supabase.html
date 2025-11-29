@@ -1,0 +1,57 @@
+<!-- <!DOCTYPE html>
+<html>
+<head>
+  <title>Supabase Session Test</title>
+</head>
+<body>
+  <h1>Supabase Session Persistence Test</h1>
+  <div id="status"></div>
+  <button onclick="checkSession()">Check Session</button>
+  <button onclick="clearStorage()">Clear Storage</button>
+  
+  <script type="module">
+    import { createClient } from 'https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/+esm'
+    
+    // Replace with your actual values
+    const SUPABASE_URL = 'YOUR_SUPABASE_URL'
+    const SUPABASE_KEY = 'YOUR_SUPABASE_ANON_KEY'
+    
+    const supabase = createClient(SUPABASE_URL, SUPABASE_KEY, {
+      auth: {
+        persistSession: true,
+        autoRefreshToken: true,
+        detectSessionInUrl: true
+      }
+    })
+    
+    window.checkSession = async () => {
+      const { data, error } = await supabase.auth.getSession()
+      const status = document.getElementById('status')
+      
+      if (error) {
+        status.innerHTML = `<p style="color: red;">Error: ${error.message}</p>`
+      } else if (data.session) {
+        status.innerHTML = `
+          <p style="color: green;">✅ Session found!</p>
+          <pre>${JSON.stringify(data.session.user, null, 2)}</pre>
+        `
+      } else {
+        status.innerHTML = `<p style="color: orange;">No session found</p>`
+      }
+      
+      // Check localStorage
+      const keys = Object.keys(localStorage).filter(k => k.includes('supabase'))
+      status.innerHTML += `<p>LocalStorage keys: ${keys.join(', ') || 'none'}</p>`
+    }
+    
+    window.clearStorage = () => {
+      localStorage.clear()
+      sessionStorage.clear()
+      document.getElementById('status').innerHTML = '<p>Storage cleared</p>'
+    }
+    
+    // Auto-check on load
+    checkSession()
+  </script>
+</body>
+</html> -->

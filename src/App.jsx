@@ -1,13 +1,14 @@
-import { BrowserRouter, Routes, Route } from 'react-router-dom'
-import Navbar from './components/Navbar'
-import RequireAuth from './components/RequireAuth'
-import Dashboard from './routes/Dashboard'
-import Patterns from './routes/Patterns'
-import PatternDetail from './routes/PatternDetail'
-import ProblemDetail from './routes/ProblemDetail'
-import DailyLog from './routes/DailyLog'
-import WeeklyPlan from './routes/WeeklyPlan'
-import Login from './routes/Login'
+import { BrowserRouter, Routes, Route } from "react-router-dom";
+import Navbar from "./components/Navbar";
+import RequireAuth from "./components/RequireAuth";
+import Dashboard from "./routes/Dashboard";
+import Patterns from "./routes/Patterns";
+import ProblemDetail from "./routes/ProblemDetail";
+import DailyLog from "./routes/DailyLog";
+import WeeklyPlan from "./routes/WeeklyPlan";
+import Login from "./routes/Login";
+import PatternDetail from "./routes/PatternDetail";
+import AddProblem from "./routes/Admin/AddProblem";
 
 function App() {
   return (
@@ -18,58 +19,69 @@ function App() {
           <Routes>
             <Route
               path="/"
-              element={(
+              element={
                 <RequireAuth>
                   <Dashboard />
                 </RequireAuth>
-              )}
+              }
             />
             <Route
+              path="/admin/add-problem"
+              element={
+                <RequireAuth>
+                  <AddProblem />
+                </RequireAuth>
+              }
+            />
+
+            <Route
               path="/patterns"
-              element={(
+              element={
                 <RequireAuth>
                   <Patterns />
                 </RequireAuth>
-              )}
+              }
             />
+
             <Route
-              path="/patterns/:patternId"
-              element={(
+              path="/patterns/:slug"
+              element={
                 <RequireAuth>
                   <PatternDetail />
                 </RequireAuth>
-              )}
+              }
             />
+
             <Route
               path="/problems/:problemId"
-              element={(
+              element={
                 <RequireAuth>
                   <ProblemDetail />
                 </RequireAuth>
-              )}
+              }
             />
             <Route
               path="/daily-log"
-              element={(
+              element={
                 <RequireAuth>
                   <DailyLog />
                 </RequireAuth>
-              )}
+              }
             />
             <Route
               path="/weekly-plan"
-              element={(
+              element={
                 <RequireAuth>
                   <WeeklyPlan />
                 </RequireAuth>
-              )}
+              }
             />
             <Route path="/login" element={<Login />} />
           </Routes>
         </main>
       </div>
     </BrowserRouter>
-  )
+  );
 }
 
-export default App
+export default App;

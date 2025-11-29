@@ -1,0 +1,65 @@
+:root {
+  /* =========================
+     COLORS
+  ==========================*/
+  --color-primary: #1e70ff;
+  --color-primary-light: #4d8eff;
+  --color-primary-lighter: #85b2ff;
+  --color-accent: #6c47ff;
+  --color-accent-light: #8f6aff;
+
+  --color-bg: #f9fafb;
+  --color-bg-soft: #f1f5f9;
+  --color-bg-section: #eef2ff;
+
+  --color-text: #1e293b;
+  --color-text-soft: #475569;
+  --color-text-muted: #64748b;
+
+  /* =========================
+     SPACING SCALE
+  ==========================*/
+  --space-1: 4px;
+  --space-2: 8px;
+  --space-3: 12px;
+  --space-4: 16px;
+  --space-6: 24px;
+  --space-8: 32px;
+  --space-12: 48px;
+  --space-16: 64px;
+  --space-24: 96px;
+
+  /* =========================
+     RADIUS
+  ==========================*/
+  --radius-sm: 6px;
+  --radius-md: 10px;
+  --radius-lg: 16px;
+  --radius-xl: 24px;
+  --radius-section: 48px;
+
+  /* =========================
+     SHADOWS
+  ==========================*/
+  --shadow-card: 0 6px 20px rgba(0, 0, 0, 0.06);
+  --shadow-lg: 0 12px 40px rgba(0, 0, 0, 0.07);
+
+  /* =========================
+     GRADIENTS
+  ==========================*/
+  --gradient-primary: linear-gradient(135deg, #1e70ff 0%, #6c47ff 100%);
+  --gradient-soft: linear-gradient(135deg, #eef4ff 0%, #f5f3ff 100%);
+}
+
+/* Dark Mode */
+.dark {
+  --color-bg: #0f172a;
+  --color-bg-soft: #1e293b;
+  --color-bg-section: #1e293b;
+
+  --color-text: #f8fafc;
+  --color-text-soft: #cbd5e1;
+  --color-text-muted: #94a3b8;
+
+  --shadow-card: 0 6px 20px rgba(0, 0, 0, 0.35);
+}
