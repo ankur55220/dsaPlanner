@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { motion } from "framer-motion";
+import { motion as Motion } from "framer-motion";
 
 import { supabase } from "../lib/supabaseClient";
 import { useAuth } from "../context/AuthContext";
@@ -149,7 +149,7 @@ export default function DailyLog() {
 
         if (insertError) {
           console.error("Error inserting daily log", insertError);
-          setError("Failed to save today\'s log.");
+          setError("Failed to save today's log.");
           return;
         }
 
@@ -208,7 +208,7 @@ export default function DailyLog() {
       ) : (
         <div className="space-y-8">
           {/* Today form */}
-          <motion.div
+          <Motion.div
             initial={{ opacity: 0, y: 12 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.3 }}
@@ -320,10 +320,10 @@ export default function DailyLog() {
                 </button>
               </form>
             </Surface>
-          </motion.div>
+          </Motion.div>
 
           {/* Recent logs */}
-          <motion.div
+          <Motion.div
             initial={{ opacity: 0, y: 12 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.3, delay: 0.05 }}
@@ -373,7 +373,7 @@ export default function DailyLog() {
                 </div>
               )}
             </Surface>
-          </motion.div>
+          </Motion.div>
         </div>
       )}
     </PageSection>

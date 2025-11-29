@@ -1,6 +1,6 @@
 import Surface from "../ui/Surface";
 import FilterChip from "../ui/FilterChip";
-import { motion } from "framer-motion";
+import { motion as Motion } from "framer-motion";
 import SearchInput from "../ui/SearchInput";
 
 export default function FilterBar({ filters, onChange }) {
@@ -13,7 +13,7 @@ export default function FilterBar({ filters, onChange }) {
             placeholder="Search problems..."
           />
         </div>
-      <motion.div layout className="flex flex-wrap items-center gap-3">
+      <Motion.div layout className="flex flex-wrap items-center gap-3">
         
         {/* Difficulty */}
         <span className="text-slate-400 text-sm mr-2">Difficulty:</span>
@@ -49,7 +49,7 @@ export default function FilterBar({ filters, onChange }) {
             }
           />
         ))}
-      </motion.div>
+      </Motion.div>
     </Surface>
   );
 }

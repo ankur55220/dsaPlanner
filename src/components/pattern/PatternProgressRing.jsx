@@ -1,4 +1,4 @@
-import { motion } from "framer-motion";
+import { motion as Motion } from "framer-motion";
 
 export default function PatternProgressRing({ solved, total }) {
   const percentage =
@@ -19,10 +19,10 @@ export default function PatternProgressRing({ solved, total }) {
       </svg>
 
       {/* Animated Progress Bar */}
-      <motion.svg
+      <Motion.svg
         className="w-full h-full absolute top-0 left-0 rotate-[-90deg]"
       >
-        <motion.circle
+        <Motion.circle
           cx="56"
           cy="56"
           r="50"
@@ -36,7 +36,7 @@ export default function PatternProgressRing({ solved, total }) {
           animate={{ strokeDashoffset: 314 - (314 * percentage) / 100 }}
           transition={{ duration: 0.8, ease: "easeOut" }}
         />
-      </motion.svg>
+      </Motion.svg>
 
       {/* Center Text */}
       <div className="absolute inset-0 flex items-center justify-center">

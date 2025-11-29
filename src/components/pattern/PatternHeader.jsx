@@ -1,4 +1,4 @@
-import { motion } from "framer-motion";
+import { motion as Motion } from "framer-motion";
 import Surface from "../ui/Surface";
 import { Badge } from "../ui/badge"; // from shadcn
 import PatternProgressRing from "./PatternProgressRing";
@@ -16,7 +16,7 @@ export default function PatternHeader({ pattern }) {
         <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-6">
           
           {/* Left: Title + Meta */}
-          <motion.div
+          <Motion.div
             initial={{ opacity: 0, y: 15 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.4 }}
@@ -35,10 +35,10 @@ export default function PatternHeader({ pattern }) {
                 {pattern.description}
               </p>
             )}
-          </motion.div>
+          </Motion.div>
 
           {/* Right: Progress Ring */}
-          <motion.div
+          <Motion.div
             initial={{ scale: 0.8, opacity: 0 }}
             animate={{ scale: 1, opacity: 1 }}
             transition={{ delay: 0.1, duration: 0.4 }}
@@ -47,7 +47,7 @@ export default function PatternHeader({ pattern }) {
               solved={pattern.solved_count}
               total={pattern.total_problems}
             />
-          </motion.div>
+          </Motion.div>
 
         </div>
       </Surface>

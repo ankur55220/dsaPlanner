@@ -1,5 +1,5 @@
 import ProblemCard from "./ProblemCard";
-import { motion } from "framer-motion";
+import { motion as Motion } from "framer-motion";
 import Section from "../ui/section";
 
 export default function ProblemList({ problems,solved,handleSolve,handleUnsolve }) {
@@ -13,7 +13,7 @@ export default function ProblemList({ problems,solved,handleSolve,handleUnsolve 
 
   return (
     <Section title="Problems">
-      <motion.div layout className="grid grid-cols-1 md:grid-cols-2 gap-4">
+      <Motion.div layout className="grid grid-cols-1 md:grid-cols-2 gap-4">
         {problems.map((p) => (
           <ProblemCard
             key={p.id}
@@ -23,7 +23,7 @@ export default function ProblemList({ problems,solved,handleSolve,handleUnsolve 
             onUnsolve={() => handleUnsolve(p.id)}
           />
         ))}
-      </motion.div>
+      </Motion.div>
     </Section>
   );
 }
