@@ -137,7 +137,7 @@ export default function DailyLog() {
 
         if (updateError) {
           console.error("Error updating daily log", updateError);
-          setError("Failed to save today\'s log.");
+          setError("Failed to save today's log.");
           return;
         }
       } else {
