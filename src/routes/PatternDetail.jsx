@@ -45,7 +45,7 @@ export default function PatternDetail() {
         const { data: patternRows, error } = await supabase
           .from("patterns")
           .select("*")
-          .eq("slug", slug);
+          .eq("id", slug);
 
         if (error) {
           console.error("❌ Error loading pattern:", error);
@@ -135,10 +135,31 @@ const handleUnsolve = async (id) => {
 
   return (
     <div className="p-6 space-y-6 text-white">
-      <PatternHeader pattern={pattern} />
+      <PatternHeader
+        pattern={pattern}
+        userSolved={solved.size}
+        userTotal={problems.length}
+      />
       <FilterBar filters={filters} onChange={setFilters} />
 
-      <ProblemList problems={filteredProblems} solved={solved} handleSolve={handleSolve} handleUnsolve={handleUnsolve} />
+      <div className="text-sm text-slate-300">
+        {problems.length > 0 ? (
+          <p>
+            Solved <span className="font-semibold">{solved.size}</span> of
+            <span className="font-semibold"> {problems.length}</span> problems
+            in this pattern.
+          </p>
+        ) : (
+          <p>No problems available for this pattern yet.</p>
+        )}
+      </div>
+
+      <ProblemList
+        problems={filteredProblems}
+        solved={solved}
+        handleSolve={handleSolve}
+        handleUnsolve={handleUnsolve}
+      />
     </div>
   );
 }

@@ -12,7 +12,7 @@ export default function Login() {
 
   const navigate = useNavigate()
   const location = useLocation()
-  const fromPath = location.state?.from?.pathname || '/patterns'
+  const fromPath = location.state?.from?.pathname || '/'
   const { session, loading: authLoading } = useAuth()
 
   // If user is already authenticated, redirect away from /login
