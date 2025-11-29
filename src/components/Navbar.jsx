@@ -1,3 +1,4 @@
+import { useState } from 'react'
 import { supabase } from '../lib/supabaseClient'
 import { useAuth } from '../context/AuthContext'
 import {
@@ -7,6 +8,7 @@ import {
   DropdownMenuItem,
 } from './ui/dropdown-menu'
 import { Link, NavLink } from 'react-router-dom'
+import { Menu } from 'lucide-react'
 
 export default function Navbar() {
   const { session } = useAuth()
@@ -28,68 +30,43 @@ export default function Navbar() {
     window.location.reload()
   }
 
+  const [mobileOpen, setMobileOpen] = useState(false)
+
+  const navLinkClass = ({ isActive }) =>
+    `px-3 py-1.5 rounded-md transition-colors ${
+      isActive
+        ? 'bg-slate-700 text-white'
+        : 'text-slate-300 hover:text-white hover:bg-slate-700/60'
+    }`
+
   return (
     <nav className="w-full bg-slate-800 border-b border-slate-700">
-      <div className="max-w-6xl mx-auto px-4 py-3 flex items-center justify-between gap-6">
-        {/* Logo */}
-        <Link to="/" className="text-xl font-bold tracking-wide">
+      <div className="max-w-6xl mx-auto px-4 py-3 flex items-center justify-between gap-4">
+        {/* Left: logo */}
+        <Link to="/" className="text-lg md:text-xl font-bold tracking-wide">
           Interview Prep OS
         </Link>
 
-        {/* Primary nav links */}
-        <div className="flex-1 flex items-center justify-center gap-4 text-sm">
-          <NavLink
-            to="/"
-            className={({ isActive }) =>
-              `px-3 py-1.5 rounded-md transition-colors ${
-                isActive
-                  ? 'bg-slate-700 text-white'
-                  : 'text-slate-300 hover:text-white hover:bg-slate-700/60'
-              }`
-            }
-          >
+        {/* Center: desktop nav */}
+        <div className="hidden md:flex flex-1 items-center justify-center gap-4 text-sm">
+          <NavLink to="/" className={navLinkClass}>
             Dashboard
           </NavLink>
-          <NavLink
-            to="/patterns"
-            className={({ isActive }) =>
-              `px-3 py-1.5 rounded-md transition-colors ${
-                isActive
-                  ? 'bg-slate-700 text-white'
-                  : 'text-slate-300 hover:text-white hover:bg-slate-700/60'
-              }`
-            }
-          >
+          <NavLink to="/patterns" className={navLinkClass}>
             Patterns
           </NavLink>
-          <NavLink
-            to="/daily-log"
-            className={({ isActive }) =>
-              `px-3 py-1.5 rounded-md transition-colors ${
-                isActive
-                  ? 'bg-slate-700 text-white'
-                  : 'text-slate-300 hover:text-white hover:bg-slate-700/60'
-              }`
-            }
-          >
+          <NavLink to="/daily-log" className={navLinkClass}>
             Daily Log
           </NavLink>
-          <NavLink
-            to="/weekly-plan"
-            className={({ isActive }) =>
-              `px-3 py-1.5 rounded-md transition-colors ${
-                isActive
-                  ? 'bg-slate-700 text-white'
-                  : 'text-slate-300 hover:text-white hover:bg-slate-700/60'
-              }`
-            }
-          >
+          <NavLink to="/weekly-plan" className={navLinkClass}>
             Weekly Plan
           </NavLink>
         </div>
 
-        {/* User Avatar Dropdown - only show if logged in */}
-        {session && (
+        {/* Right: avatar + mobile menu button */}
+        <div className="flex items-center gap-3">
+          {/* User Avatar Dropdown - only show if logged in */}
+          {session && (
           <DropdownMenu>
             <DropdownMenuTrigger className="focus:outline-none">
               {avatar ? (
@@ -127,9 +104,56 @@ export default function Navbar() {
               </DropdownMenuItem>
             </DropdownMenuContent>
           </DropdownMenu>
-        )}
+          )}
+
+          {/* Mobile menu toggle */}
+          <button
+            type="button"
+            className="md:hidden inline-flex items-center justify-center w-9 h-9 rounded-md border border-slate-600 text-slate-200 hover:bg-slate-700"
+            onClick={() => setMobileOpen((v) => !v)}
+          >
+            <span className="sr-only">Toggle navigation</span>
+            <Menu className="w-5 h-5" />
+          </button>
+        </div>
 
       </div>
+
+      {/* Mobile nav panel */}
+      {mobileOpen && (
+        <div className="md:hidden border-t border-slate-700 bg-slate-800/95">
+          <div className="max-w-6xl mx-auto px-4 py-3 flex flex-col gap-2 text-sm">
+            <NavLink
+              to="/"
+              className={navLinkClass}
+              onClick={() => setMobileOpen(false)}
+            >
+              Dashboard
+            </NavLink>
+            <NavLink
+              to="/patterns"
+              className={navLinkClass}
+              onClick={() => setMobileOpen(false)}
+            >
+              Patterns
+            </NavLink>
+            <NavLink
+              to="/daily-log"
+              className={navLinkClass}
+              onClick={() => setMobileOpen(false)}
+            >
+              Daily Log
+            </NavLink>
+            <NavLink
+              to="/weekly-plan"
+              className={navLinkClass}
+              onClick={() => setMobileOpen(false)}
+            >
+              Weekly Plan
+            </NavLink>
+          </div>
+        </div>
+      )}
     </nav>
   );
 }
