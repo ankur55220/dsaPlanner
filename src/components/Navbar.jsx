@@ -6,6 +6,7 @@ import {
   DropdownMenuContent,
   DropdownMenuItem,
 } from './ui/dropdown-menu'
+import { Link, NavLink } from 'react-router-dom'
 
 export default function Navbar() {
   const { session } = useAuth()
@@ -29,10 +30,63 @@ export default function Navbar() {
 
   return (
     <nav className="w-full bg-slate-800 border-b border-slate-700">
-      <div className="max-w-6xl mx-auto px-4 py-3 flex items-center justify-between">
-        
+      <div className="max-w-6xl mx-auto px-4 py-3 flex items-center justify-between gap-6">
         {/* Logo */}
-        <h1 className="text-xl font-bold tracking-wide">Interview Prep OS</h1>
+        <Link to="/" className="text-xl font-bold tracking-wide">
+          Interview Prep OS
+        </Link>
+
+        {/* Primary nav links */}
+        <div className="flex-1 flex items-center justify-center gap-4 text-sm">
+          <NavLink
+            to="/"
+            className={({ isActive }) =>
+              `px-3 py-1.5 rounded-md transition-colors ${
+                isActive
+                  ? 'bg-slate-700 text-white'
+                  : 'text-slate-300 hover:text-white hover:bg-slate-700/60'
+              }`
+            }
+          >
+            Dashboard
+          </NavLink>
+          <NavLink
+            to="/patterns"
+            className={({ isActive }) =>
+              `px-3 py-1.5 rounded-md transition-colors ${
+                isActive
+                  ? 'bg-slate-700 text-white'
+                  : 'text-slate-300 hover:text-white hover:bg-slate-700/60'
+              }`
+            }
+          >
+            Patterns
+          </NavLink>
+          <NavLink
+            to="/daily-log"
+            className={({ isActive }) =>
+              `px-3 py-1.5 rounded-md transition-colors ${
+                isActive
+                  ? 'bg-slate-700 text-white'
+                  : 'text-slate-300 hover:text-white hover:bg-slate-700/60'
+              }`
+            }
+          >
+            Daily Log
+          </NavLink>
+          <NavLink
+            to="/weekly-plan"
+            className={({ isActive }) =>
+              `px-3 py-1.5 rounded-md transition-colors ${
+                isActive
+                  ? 'bg-slate-700 text-white'
+                  : 'text-slate-300 hover:text-white hover:bg-slate-700/60'
+              }`
+            }
+          >
+            Weekly Plan
+          </NavLink>
+        </div>
 
         {/* User Avatar Dropdown - only show if logged in */}
         {session && (
