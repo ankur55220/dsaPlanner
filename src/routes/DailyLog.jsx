@@ -67,7 +67,7 @@ export default function DailyLog() {
         if (todayError && todayError.code !== "PGRST116") {
           // PGRST116 = no rows found for maybeSingle
           console.error("Error loading today's log", todayError);
-          setError("Failed to load today\'s log.");
+          setError("Failed to load today's log.");
         }
 
         if (todayRows) {
@@ -158,7 +158,7 @@ export default function DailyLog() {
         }
       }
 
-      setSuccess("Saved today\'s log.");
+      setSuccess("Saved today's log.");
 
       // Optimistically prepend/update today in recent logs list
       const updatedRecent = [...recentLogs];
@@ -316,7 +316,7 @@ export default function DailyLog() {
                   disabled={saving}
                   className="inline-flex items-center justify-center px-4 py-2 rounded-md bg-indigo-500 hover:bg-indigo-600 disabled:opacity-70 disabled:cursor-not-allowed text-sm font-medium"
                 >
-                  {saving ? "Saving…" : "Save today\'s log"}
+                  {saving ? "Saving…" : "Save today's log"}
                 </button>
               </form>
             </Surface>

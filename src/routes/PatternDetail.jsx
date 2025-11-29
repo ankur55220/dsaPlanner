@@ -100,7 +100,7 @@ export default function PatternDetail() {
     };
 
     loadPattern();
-  }, [slug]);
+  }, [slug, user]);
 
   if (loading) return <div className="p-6 text-white">Loading pattern...</div>;
   if (error)

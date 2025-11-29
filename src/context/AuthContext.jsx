@@ -1,6 +1,5 @@
 import { createContext, useContext, useEffect, useState } from 'react'
 import { supabase } from '../lib/supabaseClient'
-import { syncUserProfile } from '../lib/syncUserProfile'
 
 const AuthContext = createContext(null)
 

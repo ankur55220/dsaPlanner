@@ -5,7 +5,7 @@ export async function syncUserProfile(session) {
 
   const user = session.user;
 
-  const { data: profile, error } = await supabase
+  const { data: profile } = await supabase
     .from("profiles")
     .select("*")
     .eq("id", user.id)
