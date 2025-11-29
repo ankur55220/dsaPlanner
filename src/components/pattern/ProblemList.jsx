@@ -1,4 +1,4 @@
-import ProblemCard from "./ProblemCard";
+import ProblemCard from "./Problemcard";
 import { motion as Motion } from "framer-motion";
 import Section from "../ui/section";
 
