@@ -3,8 +3,13 @@ import Surface from "../ui/Surface";
 import { Badge } from "../ui/badge"; // from shadcn
 import PatternProgressRing from "./PatternProgressRing";
 
-export default function PatternHeader({ pattern }) {
+export default function PatternHeader({ pattern, userSolved, userTotal }) {
   if (!pattern) return null;
+
+  const solved =
+    typeof userSolved === "number" ? userSolved : pattern.solved_count || 0;
+  const total =
+    typeof userTotal === "number" ? userTotal : pattern.total_problems || 0;
 
   return (
     <div className="relative mb-10">
@@ -44,11 +49,23 @@ export default function PatternHeader({ pattern }) {
             transition={{ delay: 0.1, duration: 0.4 }}
           >
             <PatternProgressRing
-              solved={pattern.solved_count}
-              total={pattern.total_problems}
+              solved={solved}
+              total={total}
             />
           </Motion.div>
 
+        </div>
+        {/* User mastery summary */}
+        <div className="mt-4 text-sm text-slate-300">
+          {total > 0 ? (
+            <p>
+              You&apos;ve solved <span className="font-semibold">{solved}</span> of
+              <span className="font-semibold"> {total}</span> problems in this
+              pattern.
+            </p>
+          ) : (
+            <p>No problems configured for this pattern yet.</p>
+          )}
         </div>
       </Surface>
     </div>

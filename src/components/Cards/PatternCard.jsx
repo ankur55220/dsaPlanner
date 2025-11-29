@@ -6,6 +6,7 @@ import { Link } from "react-router-dom";
 
 export function PatternCard({ 
   id, 
+  slug,
   title, 
   description, 
   status, 

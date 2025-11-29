@@ -1,31 +1,47 @@
 import { motion as Motion } from "framer-motion";
 import Surface from "../ui/Surface";
 import { CheckCircle, Circle } from "lucide-react";
+import { useNavigate } from "react-router-dom";
 
+export default function ProblemCard({ problem, isSolved, onSolve, onUnsolve }) {
+  const navigate = useNavigate();
 
-export default function ProblemCard({ problem,isSolved,onSolve,onUnsolve}) {
+  const handleCardClick = () => {
+    if (!problem?.id) return;
+    navigate(`/problems/${problem.id}`);
+  };
+
   return (
     <Motion.div
       initial={{ opacity: 0, y: 12 }}
       animate={{ opacity: 1, y: 0 }}
       transition={{ duration: 0.25 }}
     >
-      <Surface className="hover:shadow-lg hover:border-indigo-500/40 transition-all cursor-pointer">
-      <div className="absolute top-3 right-3">
-  {isSolved ? (
-    <CheckCircle
-      className="text-emerald-400 cursor-pointer"
-      size={22}
-      onClick={onUnsolve}
-    />
-  ) : (
-    <Circle
-      className="text-slate-500 cursor-pointer hover:text-indigo-400"
-      size={22}
-      onClick={onSolve}
-    />
-  )}
-</div>
+      <Surface
+        className="relative hover:shadow-lg hover:border-indigo-500/40 transition-all cursor-pointer"
+        onClick={handleCardClick}
+      >
+        <div className="absolute top-3 right-3">
+          {isSolved ? (
+            <CheckCircle
+              className="text-emerald-400 cursor-pointer"
+              size={22}
+              onClick={(e) => {
+                e.stopPropagation();
+                onUnsolve();
+              }}
+            />
+          ) : (
+            <Circle
+              className="text-slate-500 cursor-pointer hover:text-indigo-400"
+              size={22}
+              onClick={(e) => {
+                e.stopPropagation();
+                onSolve();
+              }}
+            />
+          )}
+        </div>
 
         <div className="flex flex-col gap-2">
           <h3 className="text-lg font-semibold text-white">
